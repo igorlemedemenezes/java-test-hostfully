@@ -42,5 +42,3 @@ To run the application locally, follow these steps:
 
 - Ensure that the application is running locally before testing the endpoints.
 - Users with admin privileges can create property blocks, while regular users can make bookings.
-
-Feel free to explore and use this system for managing bookings and property blocks efficiently!
