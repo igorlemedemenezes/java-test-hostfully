@@ -32,6 +32,7 @@ public class BookingService {
         throw new BadRequestException("The booking conflicts with an existing block.");
     }
 
+    @Transactional
     public BookingDTO updateBook(Long id, BookingDTO booking) {
         final Booking bookingFound = repo.getReferenceById(id);
         if (blockService.hasConflicts(bookingFound)) {

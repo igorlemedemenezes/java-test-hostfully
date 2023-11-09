@@ -5,6 +5,7 @@ import hostfully.technical.interview.exceptions.ForbiddenException;
 import hostfully.technical.interview.model.Block;
 import hostfully.technical.interview.model.Booking;
 import hostfully.technical.interview.repository.BlockRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,7 @@ public class BlockService {
         repo.deleteById(id);
     }
 
+    @Transactional
     public Block updateBlock(long id, Block block) {
         if (repo.existsById(id)) {
             block.setId(id);
@@ -33,6 +35,7 @@ public class BlockService {
         throw new EntityNotFound();
     }
 
+    @Transactional
     public Block createBlock(Long userId, Block block) {
         if (userService.isUserAdmin(userId)){
             repo.save(block);
@@ -40,7 +43,7 @@ public class BlockService {
         throw new ForbiddenException();
     }
 
-    protected boolean hasConflicts(Booking booking) {
+    public boolean hasConflicts(Booking booking) {
         final List<Block> allBlocks = repo.findAll();
         return allBlocks.stream()
                 .filter(block -> block.getProperty().equals(booking.getProperty()))
@@ -48,7 +51,7 @@ public class BlockService {
                         booking.getStartDate(), booking.getEndDate(), block.getStartDate(), block.getEndDate()));
     }
 
-    private boolean isDateRangeOverlapping(LocalDateTime startBooking, LocalDateTime endBooking, LocalDateTime startBlock, LocalDateTime endBlock) {
+    public boolean isDateRangeOverlapping(LocalDateTime startBooking, LocalDateTime endBooking, LocalDateTime startBlock, LocalDateTime endBlock) {
         return startBooking.isBefore(startBlock) && endBooking.isAfter(endBlock);
     }
 }
